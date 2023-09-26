@@ -687,7 +687,7 @@ function refresh() {
     console.log("refreshed");
 }
 
-function setup() {
+function setup(redraw=false) {
     registerKeyInput()
 
     cw = new canvasWorld(style);
@@ -695,57 +695,61 @@ function setup() {
     cw.preload(async function () { //you have to wait that all images are loaded
         refresh();
 
-        var userprogramm = run.toString();
-        userprogramm = userprogramm.trim();
-        userprogramm = userprogramm.substring(0, userprogramm.length - 1); // remove '}'
-        userprogramm = userprogramm.replace("function run()", ""); // remove 'function run()'
-        userprogramm = userprogramm.trim();
-        userprogramm = userprogramm.substring(1); // remove '{'
-        userprogramm = userprogramm.replace(/kara.move/g, "await kara.move");
-        userprogramm = userprogramm.replace(/kara.turnLeft/g, "await kara.turnLeft");
-        userprogramm = userprogramm.replace(/kara.turnRight/g, "await kara.turnRight");
-        userprogramm = userprogramm.replace(/kara.putLeaf/g, "await kara.putLeaf");
-        userprogramm = userprogramm.replace(/kara.removeLeaf/g, "await kara.removeLeaf");
-        userprogramm = userprogramm.replace(/kara.putBerry/g, "await kara.putBerry");
-        userprogramm = userprogramm.replace(/kara.removeBerry/g, "await kara.removeBerry");
+        // if reset-button pressed, no start of program
+        if (!redraw) {
 
-        var regexp = /function (\w+)[ ]?\(.*?\)/g;
-        while (result = regexp.exec(userprogramm)) {
-            userprogramm = userprogramm.split(result[1] + "(").join("await " + result[1] + "(");
-            userprogramm = userprogramm.split(result[1] + " (").join("await " + result[1] + " (");
-            userprogramm = userprogramm.replace("function await " + result[1], "async function " + result[1]);
-        }
 
-        //prevent kara from endless looping
-        userprogramm = "function karaWalksToLongFunction() {if (karaWalksToLongCounter++ > 9999) throw new KaraException('Kara is tired doing repeating actions 10.000 times.'); return true;}" + userprogramm;
-        userprogramm = "var karaWalksToLongCounter = 0;" + userprogramm;
-        userprogramm = userprogramm.replace(/(while[ ]?\()/g, "$1 karaWalksToLongFunction() && ");
-        userprogramm = userprogramm.replace(/(for.*{)/g, "$1 karaWalksToLongFunction(); ");
+            var userprogramm = run.toString();
+            userprogramm = userprogramm.trim();
+            userprogramm = userprogramm.substring(0, userprogramm.length - 1); // remove '}'
+            userprogramm = userprogramm.replace("function run()", ""); // remove 'function run()'
+            userprogramm = userprogramm.trim();
+            userprogramm = userprogramm.substring(1); // remove '{'
+            userprogramm = userprogramm.replace(/kara.move/g, "await kara.move");
+            userprogramm = userprogramm.replace(/kara.turnLeft/g, "await kara.turnLeft");
+            userprogramm = userprogramm.replace(/kara.turnRight/g, "await kara.turnRight");
+            userprogramm = userprogramm.replace(/kara.putLeaf/g, "await kara.putLeaf");
+            userprogramm = userprogramm.replace(/kara.removeLeaf/g, "await kara.removeLeaf");
+            userprogramm = userprogramm.replace(/kara.putBerry/g, "await kara.putBerry");
+            userprogramm = userprogramm.replace(/kara.removeBerry/g, "await kara.removeBerry");
 
-        console.log(userprogramm);
+            var regexp = /function (\w+)[ ]?\(.*?\)/g;
+            while (result = regexp.exec(userprogramm)) {
+                userprogramm = userprogramm.split(result[1] + "(").join("await " + result[1] + "(");
+                userprogramm = userprogramm.split(result[1] + " (").join("await " + result[1] + " (");
+                userprogramm = userprogramm.replace("function await " + result[1], "async function " + result[1]);
+            }
 
-        var AsyncFunction = Object.getPrototypeOf(async function () { }).constructor;
-        var fn = new AsyncFunction(userprogramm);
+            //prevent kara from endless looping
+            userprogramm = "function karaWalksToLongFunction() {if (karaWalksToLongCounter++ > 9999) throw new KaraException('Kara is tired doing repeating actions 10.000 times.'); return true;}" + userprogramm;
+            userprogramm = "var karaWalksToLongCounter = 0;" + userprogramm;
+            userprogramm = userprogramm.replace(/(while[ ]?\()/g, "$1 karaWalksToLongFunction() && ");
+            userprogramm = userprogramm.replace(/(for.*{)/g, "$1 karaWalksToLongFunction(); ");
 
-        try {
-            await fn();
-        } catch (e) {
-            //draw world monochrome
-            ctx.globalCompositeOperation = 'luminosity';
-            cw.draw();
+            console.log(userprogramm);
 
-            //get error line
-            var line = /AsyncFunction:([0-9]+):([0-9]+)/.exec(e.stack)[1] - 3; //don't know why I have to remove 3 lines...
+            var AsyncFunction = Object.getPrototypeOf(async function () { }).constructor;
+            var fn = new AsyncFunction(userprogramm);
 
-            if (e instanceof KaraException) {
-                //error for Kara    
-                showwarning("Line " + line + ": " + e.message);
-            } else {
-                //regular error in js
-                showerror("Line " + line + ": " + e.message);
+            try {
+                await fn();
+            } catch (e) {
+                //draw world monochrome
+                ctx.globalCompositeOperation = 'luminosity';
+                cw.draw();
+
+                //get error line
+                var line = /AsyncFunction:([0-9]+):([0-9]+)/.exec(e.stack)[1] - 3; //don't know why I have to remove 3 lines...
+
+                if (e instanceof KaraException) {
+                    //error for Kara    
+                    showwarning("Line " + line + ": " + e.message);
+                } else {
+                    //regular error in js
+                    showerror("Line " + line + ": " + e.message);
+                }
             }
         }
-
 
     });
 }

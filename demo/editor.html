@@ -23,7 +23,8 @@
                         <span class="title">Editor</span>
                     </div>
             <textarea id="editor"></textarea>
-            <button id="1" class="btn btn-primary" onClick="runkara()">Run</button>
+            <button id="1" class="btn btn-primary" onClick="runkara()" style="width: 45%;">Run</button>
+            <button id="10" class="btn btn-primary" onClick="resetkara()" style="width: 45%;">Reset</button>
         </div>
         </section>
 
@@ -52,6 +53,17 @@
                 this.run = "function run() {" + cm_code + "}";
                 eval(cm_setup);
             }    
+
+            // new function to manage reset button
+            function resetkara() {
+                var node = document.getElementsByTagName(containerElement)[0];
+                while (node.hasChildNodes()) {
+                    node.removeChild(node.lastChild);
+                }
+                this.run = "function run() {" + cm_code + "}";
+                this.setup(true);
+                //this.setupkara();
+            }
 
             function setupkara() {
                 if (mode == 0) {
