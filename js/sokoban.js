@@ -21,11 +21,16 @@ let style = "classic";
 */
 
 let karasworld = `world:
-#####
-#  . #
-#$@  #
-# *  #
-######`
+##########
+#        #
+#        #
+#        #
+#        #
+#   @    #
+#        #
+#        #
+#        #
+##########`
 
 const imagestore = {
     classic: {
