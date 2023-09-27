@@ -93,6 +93,7 @@
                 }
             }
 
+            // Load code or setup from file if button pressed
             function load() {
                 var input = document.createElement('input');
                 input.type = 'file';
@@ -100,7 +101,7 @@
                 if (mode == 1) // setup mode: acceptable extensions
                     input.accept = '.txt, .gfsetup';
                 else
-                    input.accept = '.txt, .gflevel';
+                    input.accept = '.txt, .gfcode';
 
                 input.onchange = e => { 
 
@@ -133,6 +134,27 @@
                     }
                 }
                 input.click();
+            }
+
+            // Save code or setup to file if button pressed
+            function save() {
+                var text = "";
+                if (mode == 1) // setup mode: save setup
+                {
+                    text = cm_setup;
+                    var filename = "setup.gfsetup";
+                }
+                else // code mode: save code
+                {
+                    text = cm_code;
+                    var filename = "code.gfcode";
+                }
+                var blob = new Blob([text], {type: "text/plain;charset=utf-8"});
+                var a = document.createElement('a');
+                a.download = filename;
+                a.href = window.URL.createObjectURL(blob);
+                a.click();
+                a.remove();
             }
 
         </script>
