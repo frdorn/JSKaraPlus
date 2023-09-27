@@ -26,7 +26,12 @@
             <textarea id="editor"></textarea>
             <button id="1" class="btn btn-primary" onClick="runkara()" style="width: 40%;">Run</button>
             <button id="Reset" class="btn btn-primary" onClick="resetkara()" style="width: 40%;">Reset</button>
-            <button id="Load" class="btn btn-primary" onClick="load()" style="width: 5%;"><i class="gg-software-upload"></i></button>
+            <button id="Load" class="btn btn-primary" onClick="load()" style="width: 5%;"><i class="gg-folder"></i></button>            
+            <button id="Save" class="btn btn-primary" onClick="save()" style="width: 5%;"><i class="gg-software-download"></i></button>
+
+
+            
+
         </div>
         </section>
 
@@ -70,11 +75,13 @@
             }
 
             function setupkara() {
+                // mode 1: setup
                 if (mode == 0) {
                     mode = 1;
                     document.getElementById('2').innerHTML = "Code";
                     editor.setValue(cm_setup);
                 }
+                // mode 0: coding
                 else {
                     mode = 0;
                     document.getElementById('2').innerHTML = "Setup"
@@ -85,6 +92,49 @@
                     this.setup(true);                 
                 }
             }
+
+            function load() {
+                var input = document.createElement('input');
+                input.type = 'file';
+                alert(mode);
+                if (mode == 1) // setup mode: acceptable extensions
+                    input.accept = '.txt, .gfsetup';
+                else
+                    input.accept = '.txt, .gflevel';
+
+                input.onchange = e => { 
+
+                    // getting a hold of the file reference
+                    var file = e.target.files[0]; 
+                    console.log( file );
+                        if (file) {
+                        // setting up the reader
+                        var reader = new FileReader();
+                        reader.readAsText(file,'UTF-8');
+
+                        // here we tell the reader what to do when it's done reading...
+                        reader.onload = readerEvent => {
+                            var content = readerEvent.target.result; // this is the content!
+                            if (mode == 1) // Load setup if in setup mode
+                            {
+                                cm_setup = content;
+                                editor.setValue(cm_setup);
+                                console.log( "setup file with name " + file + " loaded" );
+                                setupkara();
+                            } 
+                            else // Load code if in code mode
+                            {
+                                cm_code = content;
+                                editor.setValue(cm_code);
+                                console.log( "code file with name " + file + " loaded" );
+                                setupkara();
+                            }
+                        }
+                    }
+                }
+                input.click();
+            }
+
         </script>
 
         <script>
