@@ -1,6 +1,6 @@
 //for loading images with correct path
 this.mydir = location.href.substring(0, location.href.lastIndexOf("/") + 1);
-
+console.log("mydir: " + mydir);
 var containerElement = "body";
 var gameMode = false; //change behavior for handling key inputs
 
