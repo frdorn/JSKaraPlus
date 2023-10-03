@@ -51,7 +51,8 @@
         // Initial Values for code and world
         var mode = 0;
         var cm_code = "\/*\nkara\n\tSensoren: onLeaf(), treeFront(), treeLeft(), treeRight(), mushroomFront()\n\tAktoren: move(), turnLeft(), turnRight(), putLeaf(), removeLeaf()\n*\/\n";
-        var cm_setup = "/*\n\t#: Tree\n\t@: Kara\n\t.: Leaf (Berry)\n\t$: Mushroom\n\t*: Mushroom on a Leaf (Berry)\n\t+: Kara on a Leaf (Berry)\n*\/\n\n\/\/ Alle Leerzeichen in einer Zeile werden zu leeren Zellen.\nkarasworld = `world:\n##########\n#        #\n#        #\n#        #\n#  @     #\n#        #\n#        #\n#        #\n#        #\n##########`\n\n"
+        // old: var cm_setup = "/*\n\t#: Tree\n\t@: Kara\n\t.: Leaf (Berry)\n\t$: Mushroom\n\t*: Mushroom on a Leaf (Berry)\n\t+: Kara on a Leaf (Berry)\n*\/\n\n\/\/ Alle Leerzeichen in einer Zeile werden zu leeren Zellen.\nkarasworld = `world:\n##########\n#        #\n#        #\n#        #\n#  @     #\n#        #\n#        #\n#        #\n#        #\n##########`\n\n"
+        var cm_setup = "##########\n#        #\n#        #\n#        #\n#  @     #\n#        #\n#        #\n#        #\n#        #\n##########"
 
         // Setting default values 
         w = 50; // Zellgröße in px
@@ -67,7 +68,7 @@
 
             this.run = "function run() {" + cm_code + "}";
 
-            eval(cm_setup);
+            eval("karasworld = `world:\n" + cm_setup + "`");
 
             setup()
         }
@@ -96,7 +97,7 @@
                 document.getElementById('2').innerHTML = "Setup"
                 editor.setValue(cm_code);
                 // when switching from setup to code: redraw kara
-                eval(cm_setup);
+                eval("karasworld = `world:\n" + cm_setup + "`");
                 // trigger redraw
                 this.setup(true);
             }
