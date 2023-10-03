@@ -112,11 +112,11 @@
         function load() {
             var input = document.createElement('input');
             input.type = 'file';
-            alert(mode);
+
             if (mode == 1) // setup mode: acceptable extensions
-                input.accept = '.txt, .gfsetup';
+                input.accept = '.txt, .karasetup';
             else
-                input.accept = '.txt, .gfcode';
+                input.accept = '.txt, .karacode';
 
             input.onchange = e => {
 
@@ -157,12 +157,12 @@
             if (mode == 1) // setup mode: save setup
             {
                 text = cm_setup;
-                var filename = "setup.gfsetup";
+                var filename = "setup.karasetup";
             }
             else // code mode: save code
             {
                 text = cm_code;
-                var filename = "code.gfcode";
+                var filename = "code.karacode";
             }
             var blob = new Blob([text], { type: "text/plain;charset=utf-8" });
             var a = document.createElement('a');
