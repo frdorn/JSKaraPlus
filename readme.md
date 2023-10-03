@@ -1,6 +1,6 @@
-# JavaScriptKara
+# JavaScriptKaraPlus
 
-![allstyles](demo/allstyles.png)
+
 
 JavaScriptKara aims to teach students fundamental ideas of programming.
 
@@ -8,32 +8,15 @@ Kara is like [Sokoban](https://en.wikipedia.org/wiki/Sokoban). It is very popula
 
 In contrast to the original JavaScriptKara itself is written in JavaScript and is under Mozilla Public License 2.0.
 
-Real world use: [ada7.de](https://ada7.de/c/pD9Tf)
-
-
-
-## Download
-
-Just grab `js/sokoban.js` and `img` and you are ready to go.
 
 
 ## Live
 
 [Demo](https://wi-wissen.github.io/JavaScriptKara/demo/demo)
 
-[Editor](https://wi-wissen.github.io/JavaScriptKara/demo/editor)
+## World Setup
 
-## How to use
 
-For full example see: `demo/demo.html`
-
-```js
-w = 32; //cellsize in px
-margin = 2; //margin inside cell in px
-wait = 800; //wait between each move and turn of kara in ms
-style = "flaticon"; // use: classic, flaticon, icon8_color, icon8_ios or icon8_office
-
-/*
 	#: Tree
 	@: Kara
 	.: Leaf
@@ -41,66 +24,24 @@ style = "flaticon"; // use: classic, flaticon, icon8_color, icon8_ios or icon8_o
 	*: Mushroom on a Leaf
 	+: Kara on a Leaf
 
-*/
+## Methods
 
-// Be aware that space in front of line are interpretated as empty fields.
-karasworld = `world:
-#####
-# .. #
-# @$ #
-# *  #
-######`
 
-//All settings above are optional. You only have to run this:
-setup();
-
-/*
 kara
 	senor: onLeaf(), treeFront(), treeLeft(), treeRight(), mushroomFront()
 	actor: move(), turnLeft(), turnRight(), putLeaf(), removeLeaf()
-*/
-
-function run() {
-	kara.move();
-	kara.turnLeft();
-	kara.move();
-	if (kara.onLeaf()) {
-		kara.removeLeaf();
-	}
-	if (kara.treeFront()) {
-		kara.turnRight();
-		kara.move();
-	}
-	if (kara.treeLeft()) {
-		kara.putLeaf();
-		kara.turnRight();
-		kara.move();
-	}
-  
-  function turnaround() {
-    kara.turnRight();
-    kara.turnRight();
-  }
-  
-  turnaround();
-}
-```
-
-Syntax for creating a world is compatibel to [GreenfootKara](https://github.com/marcojakob/greenfoot-kara).
-
 
 
 ### Contributing
 
-I would love to see JavaScriptKara in action! Please release your excesices with JavaScriptKara to help other teachers to make there lessons also greate. :smile:
+This Version of JavaScriptKara-Plus is forked from [wi-wissen] (https://github.com/wi-wissen/JavaScriptKara). Big Thanks to this great work!
 
-Thank you for considering contributing to the JavaScriptKara! Create a pull request or contact [me](https://wi-wissen.de/contact.php).
 
 
 
 ## Licence
 
-JavaScript is licenced under Mozilla Public License 2.0. Just name me on the same page and link to this page or [wi-wissen.de](https://wi-wissen.de/). On printed works you have to name me with my realname like other authors or contributors. If you made changes to JavaScriptKara you have to provide the source code.
+JavaScript is licenced under Mozilla Public License 2.0. Just name me and the original programmer of [wi-wissen.de](https://wi-wissen.de/) on the same page and link to this repository. On printed works you have to name me with my realname like other authors or contributors. If you made changes to JavaScriptKaraPlus you have to provide the source code.
 
 All icons are designed by very talented people. Please respect there copyright:
 
