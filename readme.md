@@ -27,9 +27,9 @@ In contrast to the original JavaScriptKara itself is written in JavaScript and i
 ## Methods
 
 
-kara
-	senor: onLeaf(), treeFront(), treeLeft(), treeRight(), mushroomFront()
-	actor: move(), turnLeft(), turnRight(), putLeaf(), removeLeaf()
+	kara
+		senor: onLeaf(), treeFront(), treeLeft(), treeRight(), mushroomFront()
+		actor: move(), turnLeft(), turnRight(), putLeaf(), removeLeaf()
 
 
 ### Contributing
