@@ -12,7 +12,7 @@ In contrast to the original JavaScriptKara itself is written in JavaScript and i
 
 ## Live
 
-[Demo](https://wi-wissen.github.io/JavaScriptKara/demo/demo)
+[Start Coding!](https://frdorn.github.io/JavaScriptKaraPlus/)
 
 ## World Setup
 
