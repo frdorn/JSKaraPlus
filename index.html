@@ -7,7 +7,8 @@
     <link rel="stylesheet" href="css/editor.css">
     <link rel="stylesheet" href="css/icons.css">
     <link href='css/sokoban.css' rel='stylesheet'>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.40.0/lib/codemirror.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.65.15/lib/codemirror.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.65.15/addon/hint/show-hint.css">
 </head>
 
 <body>
@@ -40,8 +41,11 @@
     </section>
 
     <script src="js/sokoban.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.40.0/lib/codemirror.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.40.0/mode/javascript/javascript.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.5/lib/codemirror.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.5/mode/javascript/javascript.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.5/addon/hint/show-hint.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.5/addon/hint/javascript-hint.js"></script>
+
 
     <script>
         var containerElement = "kara";
@@ -59,6 +63,7 @@
         margin = 2; //margin inside cell in px
         wait = 800; //wait between each move and turn of kara in ms
         style = "classic"; // use: classic, flaticon, icon8_color, icon8_ios or icon8_office
+        editorFontSize = 15; // font size of editor in px, needs editor.refresh() to update
 
         function runkara() {
             var node = document.getElementsByTagName(containerElement)[0];
@@ -172,8 +177,13 @@
     <script>
         var myTextarea = document.getElementById('editor');
         var editor = CodeMirror.fromTextArea(myTextarea, {
-            lineNumbers: true
+            lineNumbers: true,
+            extraKeys: { "Ctrl-Space": "autocomplete" },
+            mode: { name: "javascript", globalVars: true },
+            completeSingle: false,
+
         });
+        editor.getWrapperElement().style["font-size"] = editorFontSize + "px";
 
         editor.setValue(cm_code);
 
