@@ -34,7 +34,7 @@ In contrast to the original JavaScriptKara itself is written in JavaScript and i
 
 ### Contributing
 
-This Version of JavaScriptKara-Plus is forked from [wi-wissen] (https://github.com/wi-wissen/JavaScriptKara). Big Thanks to this great work!
+This Version of JavaScriptKara-Plus is forked from [wi-wissen](https://github.com/wi-wissen/JavaScriptKara). Big Thanks to this great work!
 
 
 
