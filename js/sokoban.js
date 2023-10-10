@@ -743,8 +743,14 @@ function setup(redraw=false) {
                 ctx.globalCompositeOperation = 'luminosity';
                 cw.draw();
 
-                //get error line
-                var line = /AsyncFunction:([0-9]+):([0-9]+)/.exec(e.stack)[1] - 3; //don't know why I have to remove 3 lines...
+                //get error line: dependent on browser
+                if (navigator.userAgent.indexOf("Firefox") != -1) {
+                // only works in firefox
+                    var line = /AsyncFunction:([0-9]+):([0-9]+)/.exec(e.stack)[1] - 2; //offset needed
+                } else {
+                // works in chrome
+                    var line = /<anonymous>:([0-9]+):([0-9]+)/.exec(e.stack)[1] - 2; //offset needed
+                }
 
                 if (e instanceof KaraException) {
                     //error for Kara    
