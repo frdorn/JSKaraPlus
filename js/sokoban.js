@@ -750,7 +750,7 @@ function setup(redraw=false) {
                 } else {
                 // works in chrome
                     var line = /<anonymous>:([0-9]+):([0-9]+)/.exec(e.stack)[1] - 2; //offset needed
-                }
+                } 
 
                 if (e instanceof KaraException) {
                     //error for Kara    
