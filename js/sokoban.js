@@ -1,6 +1,6 @@
 //for loading images with correct path
 this.mydir = location.href.substring(0, location.href.lastIndexOf("/") + 1);
-console.log("mydir: " + mydir);
+//console.log("mydir: " + mydir);
 var containerElement = "body";
 var gameMode = false; //change behavior for handling key inputs
 
@@ -498,13 +498,13 @@ class canvasWorld {
     }
 
     preload(callback) {
-        console.log('starting preload');
+        //console.log('starting preload');
         var loaded = 0;
 
         var loadImage = function (src) {
             var img = new Image();
             img.onload = complete;
-            console.log("img.src = " + mydir + src);
+            //console.log("img.src = " + mydir + src);
             img.src = mydir + src;
             return img;
         }
@@ -512,11 +512,11 @@ class canvasWorld {
         var complete = function () {
             loaded += 1;
             if (loaded === 8 && callback) {
-                console.log("prealoding compleated");
+                //console.log("prealoding compleated");
                 callback(true);
             }
         }
-        console.log(style);
+        //console.log(style);
         playerSprite = loadImage(imagestore[style].player); //Kara
         playerUpSprite = loadImage(imagestore[style].player_up); //Kara
         playerDownSprite = loadImage(imagestore[style].player_down); //Kara
@@ -689,7 +689,7 @@ const sleep = ms => new Promise(res => setTimeout(res, ms));
 
 function refresh() {
     cw.draw();
-    console.log("refreshed");
+    //console.log("refreshed");
 }
 
 function setup(redraw=false) {
@@ -731,7 +731,8 @@ function setup(redraw=false) {
             userprogramm = userprogramm.replace(/(while[ ]?\()/g, "$1 karaWalksToLongFunction() && ");
             userprogramm = userprogramm.replace(/(for.*{)/g, "$1 karaWalksToLongFunction(); ");
 
-            console.log(userprogramm);
+            // show userprogramm in console:
+            // console.log(userprogramm);
 
             var AsyncFunction = Object.getPrototypeOf(async function () { }).constructor;
             var fn = new AsyncFunction(userprogramm);
