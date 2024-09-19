@@ -692,6 +692,20 @@ function refresh() {
     //console.log("refreshed");
 }
 
+function findMissingBrackets(prog, method) {
+    var index = prog.indexOf("kara." + method);
+    while (index != -1) {
+        console.log("Stelle gefunden bei index: " + index);
+        if (prog[index + 5 + method.length] != "(") {
+            prog = prog.substring(0, index) + "throw new KaraException('kara. " + method + " without ()');" + prog.substring(index+method.length+6);                            
+            index = prog.indexOf("kara." + method, index+40+method.length);
+        } else {
+            index = prog.indexOf("kara." + method, index+6+method.length);
+        }
+    }
+    return prog;
+}
+
 function setup(redraw=false) {
     registerKeyInput()
 
@@ -710,6 +724,15 @@ function setup(redraw=false) {
             userprogramm = userprogramm.replace("function run()", ""); // remove 'function run()'
             userprogramm = userprogramm.trim();
             userprogramm = userprogramm.substring(1); // remove '{'
+            // Dornmod: Find error kara.move instead of kara.move()
+            userprogramm = findMissingBrackets(userprogramm, "move");
+            userprogramm = findMissingBrackets(userprogramm, "turnLeft");
+            userprogramm = findMissingBrackets(userprogramm, "turnRight");
+            userprogramm = findMissingBrackets(userprogramm, "putLeaf");
+            userprogramm = findMissingBrackets(userprogramm, "removeLeaf");
+            userprogramm = findMissingBrackets(userprogramm, "putBerry");
+            userprogramm = findMissingBrackets(userprogramm, "removeBerry");
+
             userprogramm = userprogramm.replace(/kara.move/g, "await kara.move");
             userprogramm = userprogramm.replace(/kara.turnLeft/g, "await kara.turnLeft");
             userprogramm = userprogramm.replace(/kara.turnRight/g, "await kara.turnRight");
@@ -732,10 +755,17 @@ function setup(redraw=false) {
             userprogramm = userprogramm.replace(/(for.*{)/g, "$1 karaWalksToLongFunction(); ");
 
             // show userprogramm in console:
-            // console.log(userprogramm);
+            console.log(userprogramm);
 
             var AsyncFunction = Object.getPrototypeOf(async function () { }).constructor;
-            var fn = new AsyncFunction(userprogramm);
+            
+            try {
+                var fn = new AsyncFunction(userprogramm);
+            } catch(e) {
+                showerror(e.message);
+                return;
+            }
+            
 
             try {
                 await fn();
