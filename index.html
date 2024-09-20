@@ -103,8 +103,10 @@
                 // change button text
                 document.getElementById('LoadLabel').innerHTML = "Load Karaworld";    
                 document.getElementById('Load').style.width = "300px";
+                document.getElementById('Load').classList.add("darkred");
                 document.getElementById('SaveLabel').innerHTML = "Save Karaworld";
                 document.getElementById('Save').style.width = "300px";
+                document.getElementById('Save').classList.add("darkred");
                 editor.setValue(cm_setup);
             }
             // mode 0: coding
@@ -123,8 +125,10 @@
 
                 document.getElementById('LoadLabel').innerHTML = "";
                 document.getElementById('Load').style.width = "5%";
+                document.getElementById('Load').classList.remove("darkred");
                 document.getElementById('SaveLabel').innerHTML = "";
                 document.getElementById('Save').style.width = "5%";
+                document.getElementById('Save').classList.remove("darkred");
 
                 // when switching from setup to code: redraw kara
                 eval("karasworld = `world:\n" + cm_setup + "`");
