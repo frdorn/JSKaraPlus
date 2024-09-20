@@ -15,14 +15,11 @@
     <section class="container">
         <div class="left-half">
             <kara></kara>
-            <button id="2" class="btn btn-primary" onClick="setupkara()">Setup</button>
+            <button id="2" class="btn btn-primary darkred" onClick="setupkara()">Setup</button>
         </div>
         <div class="right-half">
-            <div class="terminal-topbar">
-                <span class="button red"></span>
-                <span class="button yellow"></span>
-                <span class="button green"></span>
-                <span class="title">Editor</span>
+            <div class="terminal-topbar" id="terminal-topbar">
+                <span class="title" id="editor_heading">Editor</span>
             </div>
             <textarea id="editor"></textarea>
             <button id="1" class="btn btn-primary" onClick="runkara()" style="width: 40%;"><i class="gg-play-button"
@@ -30,9 +27,9 @@
             <button id="Reset" class="btn btn-primary" onClick="resetkara()" style="width: 40%;"><i
                     class="gg-play-backwards" style="float: left; margin-top: 5px;"></i>Reset</button>
             <button id="Load" class="btn btn-primary" onClick="load()" style="width: 5%;"><i
-                    class="gg-folder"></i></button>
+                    class="gg-folder" style="float: left;"></i><span id="LoadLabel"></span></button>
             <button id="Save" class="btn btn-primary" onClick="save()" style="width: 5%;"><i
-                    class="gg-software-download"></i></button>
+                    class="gg-software-download" style="float: left;"></i><span id="SaveLabel"></span></button>
 
 
 
@@ -86,6 +83,7 @@
             }
             this.run = "function run() {" + cm_code + "}";
             this.setup(true);
+
             //this.setupkara();
         }
 
@@ -94,13 +92,40 @@
             if (mode == 0) {
                 mode = 1;
                 document.getElementById('2').innerHTML = "Code";
+                document.getElementById('editor_heading').innerHTML = "Kara World Editor";
+                document.getElementById('terminal-topbar').classList.add("setup"); 
+            
+                // remove class darkred from button
+                document.getElementById('2').classList.remove("darkred");
+                // hide buttons
+                document.getElementById('1').style.display = "none";
+                document.getElementById('Reset').style.display = "none";       
+                // change button text
+                document.getElementById('LoadLabel').innerHTML = "Load Karaworld";    
+                document.getElementById('Load').style.width = "300px";
+                document.getElementById('SaveLabel').innerHTML = "Save Karaworld";
+                document.getElementById('Save').style.width = "300px";
                 editor.setValue(cm_setup);
             }
             // mode 0: coding
             else {
                 mode = 0;
                 document.getElementById('2').innerHTML = "Setup"
+                document.getElementById('editor_heading').innerHTML = "Editor";
+                document.getElementById('terminal-topbar').classList.remove("setup");    
+
                 editor.setValue(cm_code);
+                // add class darkred to button
+                document.getElementById('2').classList.add("darkred");
+
+                document.getElementById('1').style.display = "inline-block";
+                document.getElementById('Reset').style.display = "inline-block";   
+
+                document.getElementById('LoadLabel').innerHTML = "";
+                document.getElementById('Load').style.width = "5%";
+                document.getElementById('SaveLabel').innerHTML = "";
+                document.getElementById('Save').style.width = "5%";
+
                 // when switching from setup to code: redraw kara
                 eval("karasworld = `world:\n" + cm_setup + "`");
                 // trigger redraw

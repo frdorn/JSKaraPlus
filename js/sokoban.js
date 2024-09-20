@@ -461,6 +461,8 @@ class Cell {
 
     drawGrid() {
         if (this.border) {
+            ctx.beginPath();
+
             cw.line(this.x, this.y, this.x + w, this.y);
             cw.line(this.x + w, this.y, this.x + w, this.y + w);
             cw.line(this.x + w, this.y + w, this.x, this.y + w);
@@ -547,14 +549,33 @@ class canvasWorld {
     }
 
     line(x1, y1, x2, y2) {
+        // Line has to be drawn in two steps, because of different behavior in Chrome and Firefox
+        
+        // works in Firefox
+        ctx.moveTo(0, 0);
+        ctx.stroke();
+        //ctx.globalCompositeOperation = 'luminosity';
         ctx.beginPath();
-        ctx.moveTo(x1, y1);
-        ctx.lineTo(x2, y2);
         ctx.lineWidth = 0.1;
         // set line color
         ctx.strokeStyle = imagestore[style].border_color;
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
         ctx.stroke();
         ctx.closePath();
+        //ctx.globalCompositeOperation = 'source-over';
+
+
+        // Works in Chrome
+        ctx.beginPath();
+        ctx.lineWidth = 0.1;
+        // set line color
+        ctx.strokeStyle = imagestore[style].border_color;
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+        ctx.closePath();
+
     }
 
 
