@@ -589,6 +589,7 @@ class canvasWorld {
         // Read line by line of a txt with the levels and map it
         var lines = world.split('\n');
         rows = lines.length; //set rows of world
+        cols = 0;
         for (var y = 0; y < lines.length; y++) {
             if (lines[y].length > cols) cols = lines[y].length; //set cols of world
         }
@@ -738,7 +739,7 @@ function setup(redraw=false) {
 
         // if reset-button pressed, no start of program
         if (!redraw) {
-
+            var foundError = false;
 
             var userprogramm = run.toString();
             userprogramm = userprogramm.trim();
@@ -770,6 +771,16 @@ function setup(redraw=false) {
                 userprogramm = userprogramm.replace("function await " + result[1], "async function " + result[1]);
             }
 
+            // check for errors line per line
+            for (var i = 0; i < userprogramm.split("\n").length; i++) {
+                var singleLine = userprogramm.split("\n")[i];
+                // check for comma instead of semicolon
+                if (singleLine.trim().endsWith(',')) {
+                    showerror("Line " + (i+1) + ": , on end of line");
+                    foundError = true;
+                }
+            }
+
             //prevent kara from endless looping
             userprogramm = "function karaWalksToLongFunction() {if (karaWalksToLongCounter++ > 9999) throw new KaraException('Kara is tired doing repeating actions 10.000 times.'); return true;}" + userprogramm;
             userprogramm = "var karaWalksToLongCounter = 0;" + userprogramm;
@@ -781,6 +792,11 @@ function setup(redraw=false) {
 
             var AsyncFunction = Object.getPrototypeOf(async function () { }).constructor;
             
+            // no execution of userprogramm if error found
+            if (foundError) {
+                return;
+            }
+
             try {
                 var fn = new AsyncFunction(userprogramm);
             } catch(e) {
@@ -827,6 +843,10 @@ window.onerror = function (msg, url, lineNo, columnNo, error) {
 
 function showerror(msg) {
     console.log("Error: " + msg);
+
+    ctx.globalCompositeOperation = 'luminosity';
+    cw.draw();
+
 
     var newError = document.createElement("div");
     newError.classList.add("alert");
