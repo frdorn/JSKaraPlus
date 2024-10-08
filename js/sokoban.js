@@ -788,7 +788,7 @@ function setup(redraw=false) {
             userprogramm = userprogramm.replace(/(for.*{)/g, "$1 karaWalksToLongFunction(); ");
 
             // show userprogramm in console:
-            console.log(userprogramm);
+            // console.log(userprogramm);
 
             var AsyncFunction = Object.getPrototypeOf(async function () { }).constructor;
             

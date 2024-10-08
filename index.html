@@ -107,6 +107,8 @@
                 document.getElementById('SaveLabel').innerHTML = "Save Karaworld";
                 document.getElementById('Save').style.width = "300px";
                 document.getElementById('Save').classList.add("darkred");
+                // hide element with id world
+                document.getElementById('world').style.display = "none";
                 editor.setValue(cm_setup);
             }
             // mode 0: coding
@@ -129,6 +131,8 @@
                 document.getElementById('SaveLabel').innerHTML = "";
                 document.getElementById('Save').style.width = "6%";
                 document.getElementById('Save').classList.remove("darkred");
+                // appear element with id world
+                document.getElementById('world').style.display = "block";
 
                 // when switching from setup to code: redraw kara
                 eval("karasworld = `world:\n" + cm_setup + "`");
