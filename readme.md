@@ -8,7 +8,7 @@ Kara is like [Sokoban](https://en.wikipedia.org/wiki/Sokoban). It is very popula
 
 In contrast to the original JavaScriptKara itself is written in JavaScript and is under Mozilla Public License 2.0.
 
-
+![Screenshot](github_jskara.png)
 
 ## Live
 
