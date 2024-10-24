@@ -2,7 +2,7 @@
 
 
 
-JavaScriptKaraPlus aims to teach students fundamental ideas of programming.
+JavaScriptKaraPlus aims to teach students fundamental ideas of programming. I use this tool in my coding lessons in a school in Neckargemünd, Germany
 
 Kara is like [Sokoban](https://en.wikipedia.org/wiki/Sokoban). It is very popular in [German speaking countries](https://de.wikipedia.org/wiki/Kara_(Programmierumgebung)) to teach students how to program. JavaScriptKara reimplements [JavaScriptKara from swisseduc.ch](http://www.swisseduc.ch/informatik/karatojava/javascriptkara/). JavaScriptKaraPlus enhances [JavaScriptKara from wi-wissen](https://github.com/wi-wissen/JavaScriptKara)
 
