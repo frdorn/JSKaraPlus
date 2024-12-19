@@ -85,7 +85,7 @@ max-height: 100%;
     max-height: 100%;
 }
 
-kara {
+#kara {
     margin: 0;
     display: flex;
     flex-direction: column;
@@ -94,7 +94,7 @@ kara {
     height: calc(100%  - 54px) !important; 
 }
 
-#select-presets {
+#left-half-setup, #left-half-code {
     margin: 0;
     display: flex;
     flex-direction: column;

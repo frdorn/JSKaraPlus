@@ -14,8 +14,12 @@
 <body>
     <section class="container">
         <div class="left-half">
-            <kara id="kara"></kara>
-            <div id="select-presets" style="display: none;">
+            <div id="left-half-code">
+                <kara id="kara"></kara>
+                <small>Speed</small>
+                <input type="range" id="mySlider" min="100" max="1200" value="800" oninput="sliderChanged(this.value)">
+            </div>
+            <div id="left-half-setup" style="display: none;">
                 <div id="select-presets-content">
                     <h3>Legende:</h3>
                     <pre>
@@ -88,7 +92,7 @@ $: Mushroom
     <script>
         // Initial Values for code and world
         var mode = 0;
-        var cm_code = "\/*\nkara\n\tSensoren: onLeaf(), treeFront(), treeLeft(), treeRight(), mushroomFront()\n\tAktoren: move(), turnLeft(), turnRight(), putLeaf(), removeLeaf()\n*\/\n";
+        var cm_code = "\/*\nkara\n\tSensoren: onLeaf(), treeFront(), treeLeft(), treeRight(), mushroomFront()\n\tAktoren: move(), turnLeft(), turnRight(), putLeaf(), removeLeaf()\n    z.B. kara.move()\n*\/\n";
         // old: var cm_setup = "/*\n\t#: Tree\n\t@: Kara\n\t.: Leaf (Berry)\n\t$: Mushroom\n\t*: Mushroom on a Leaf (Berry)\n\t+: Kara on a Leaf (Berry)\n*\/\n\n\/\/ Alle Leerzeichen in einer Zeile werden zu leeren Zellen.\nkarasworld = `world:\n##########\n#        #\n#        #\n#        #\n#  @     #\n#        #\n#        #\n#        #\n#        #\n##########`\n\n"
         var cm_setup = "##########\n#        #\n#        #\n#        #\n#  @     #\n#        #\n#        #\n#        #\n#        #\n##########"
 
@@ -133,8 +137,8 @@ $: Mushroom
                 document.getElementById('terminal-topbar').classList.add("setup"); 
                 
                 // Show select-presets, hide kara
-                document.getElementById('select-presets').style.display = "block";
-                document.getElementById('kara').style.display = "none";
+                document.getElementById('left-half-code').style.display = "none";
+                document.getElementById('left-half-setup').style.display = "block";
 
                 // remove class darkred from button
                 document.getElementById('2').classList.remove("darkred");
@@ -162,8 +166,8 @@ $: Mushroom
                 editor.setValue(cm_code);
 
                 // hide select-presets, show kara
-                document.getElementById('select-presets').style.display = "none";
-                document.getElementById('kara').style.display = "block";
+                document.getElementById('left-half-code').style.display = "block";
+                document.getElementById('left-half-setup').style.display = "none";
 
                 // add class darkred to button
                 document.getElementById('2').classList.add("darkred");
@@ -266,6 +270,14 @@ $: Mushroom
 
             }
         }
+
+
+        function sliderChanged(value) {
+            console.log("Slider value: " + value);
+            wait = 1200 - value;
+            // Fügen Sie hier den Code hinzu, der ausgeführt werden soll, wenn der Slider-Wert geändert wird
+        }
+
     </script>
 
     <script>

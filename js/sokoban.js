@@ -10,6 +10,8 @@ let w = 32;
 let margin = 2;
 let wait = 800;
 let style = "classic";
+let abort = false;
+let isRunning = false;
 
 /*
     #: Baum
@@ -737,6 +739,15 @@ function setup(redraw=false) {
     cw.preload(async function () { //you have to wait that all images are loaded
         refresh();
 
+        // abort current program
+        if (isRunning) {
+            abort = true;
+            await sleep(wait+100);
+            console.log("Program abort");
+            abort = false;
+            isRunning = false;
+        }
+
         // if reset-button pressed, no start of program
         if (!redraw) {
             var foundError = false;
@@ -756,13 +767,13 @@ function setup(redraw=false) {
             userprogramm = findMissingBrackets(userprogramm, "putBerry");
             userprogramm = findMissingBrackets(userprogramm, "removeBerry");
 
-            userprogramm = userprogramm.replace(/kara.move/g, "await kara.move");
-            userprogramm = userprogramm.replace(/kara.turnLeft/g, "await kara.turnLeft");
-            userprogramm = userprogramm.replace(/kara.turnRight/g, "await kara.turnRight");
-            userprogramm = userprogramm.replace(/kara.putLeaf/g, "await kara.putLeaf");
-            userprogramm = userprogramm.replace(/kara.removeLeaf/g, "await kara.removeLeaf");
-            userprogramm = userprogramm.replace(/kara.putBerry/g, "await kara.putBerry");
-            userprogramm = userprogramm.replace(/kara.removeBerry/g, "await kara.removeBerry");
+            userprogramm = userprogramm.replace(/kara.move/g, "if (!abort) await kara.move");
+            userprogramm = userprogramm.replace(/kara.turnLeft/g, "if (!abort) await kara.turnLeft");
+            userprogramm = userprogramm.replace(/kara.turnRight/g, "if (!abort) await kara.turnRight");
+            userprogramm = userprogramm.replace(/kara.putLeaf/g, "if (!abort) await kara.putLeaf");
+            userprogramm = userprogramm.replace(/kara.removeLeaf/g, "if (!abort) await kara.removeLeaf");
+            userprogramm = userprogramm.replace(/kara.putBerry/g, "if (!abort) await kara.putBerry");
+            userprogramm = userprogramm.replace(/kara.removeBerry/g, "if (!abort) await kara.removeBerry");
 
             var regexp = /function (\w+)[ ]?\(.*?\)/g;
             while (result = regexp.exec(userprogramm)) {
@@ -787,9 +798,6 @@ function setup(redraw=false) {
             userprogramm = userprogramm.replace(/(while[ ]?\()/g, "$1 karaWalksToLongFunction() && ");
             userprogramm = userprogramm.replace(/(for.*{)/g, "$1 karaWalksToLongFunction(); ");
 
-            // show userprogramm in console:
-            // console.log(userprogramm);
-
             var AsyncFunction = Object.getPrototypeOf(async function () { }).constructor;
             
             // no execution of userprogramm if error found
@@ -799,6 +807,8 @@ function setup(redraw=false) {
 
             try {
                 var fn = new AsyncFunction(userprogramm);
+                // show userprogramm in console:
+                console.log("Userprogram:"+fn);
             } catch(e) {
                 showerror(e.message);
                 return;
@@ -806,7 +816,9 @@ function setup(redraw=false) {
             
 
             try {
+                isRunning = true;
                 await fn();
+                isRunning=false;
             } catch (e) {
                 //draw world monochrome
                 ctx.globalCompositeOperation = 'luminosity';
