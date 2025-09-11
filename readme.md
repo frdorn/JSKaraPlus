@@ -1,6 +1,5 @@
 # JSKaraPlus
-
-🇬🇧 [English version below](##english-version)
+🇬🇧 [English version below](#english-version)
 
 JSKaraPlus hilft Schüler*innen, grundlegende Programmierkonzepte zu erlernen. Es passt ideal zur Bildungsplaneinheit 5: Grundlagen der Programmierung des Baden-Würrtembergischen Bildungsplans Informatik an beruflichen Gymnasien. Ich setze dieses Tool selbst im Informatikunterricht an einer Schule in Neckargemünd ein.
 

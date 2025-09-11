@@ -717,16 +717,40 @@ function refresh() {
 }
 
 function findMissingBrackets(prog, method) {
+    // Check for kara.method syntax
     var index = prog.indexOf("kara." + method);
     while (index != -1) {
         console.log("Stelle gefunden bei index: " + index);
         if (prog[index + 5 + method.length] != "(") {
-            prog = prog.substring(0, index) + "throw new KaraException('kara. " + method + " without ()');" + prog.substring(index+method.length+6);                            
+            prog = prog.substring(0, index) + "throw new KaraException('kara." + method + " without ()');" + prog.substring(index+method.length+6);                            
             index = prog.indexOf("kara." + method, index+40+method.length);
         } else {
             index = prog.indexOf("kara." + method, index+6+method.length);
         }
     }
+    
+    // Check for method without kara. prefix
+    // Use a more compatible approach without negative lookbehind
+    var regex = new RegExp("\\b" + method + "(?!\\s*\\()", "g");
+    var matches = [];
+    var match;
+    
+    // Find all matches first
+    while ((match = regex.exec(prog)) !== null) {
+        // Check if this match is not preceded by "kara."
+        var startPos = match.index;
+        var precedingText = prog.substring(Math.max(0, startPos - 5), startPos);
+        if (!precedingText.endsWith("kara.")) {
+            matches.push({index: startPos, method: method});
+        }
+    }
+    
+    // Replace matches from end to beginning to preserve indices
+    for (var i = matches.length - 1; i >= 0; i--) {
+        var matchInfo = matches[i];
+        prog = prog.substring(0, matchInfo.index) + "throw new KaraException('" + method + " without ()');" + prog.substring(matchInfo.index + method.length);
+    }
+    
     return prog;
 }
 
@@ -757,7 +781,7 @@ function setup(redraw=false) {
             userprogramm = userprogramm.replace("function run()", ""); // remove 'function run()'
             userprogramm = userprogramm.trim();
             userprogramm = userprogramm.substring(1); // remove '{'
-            // Dornmod: Find error kara.move instead of kara.move()
+            // Dornmod: Find error kara.move instead of kara.move() and also methods without kara prefix
             userprogramm = findMissingBrackets(userprogramm, "move");
             userprogramm = findMissingBrackets(userprogramm, "turnLeft");
             userprogramm = findMissingBrackets(userprogramm, "turnRight");
@@ -765,14 +789,48 @@ function setup(redraw=false) {
             userprogramm = findMissingBrackets(userprogramm, "removeLeaf");
             userprogramm = findMissingBrackets(userprogramm, "putBerry");
             userprogramm = findMissingBrackets(userprogramm, "removeBerry");
+            userprogramm = findMissingBrackets(userprogramm, "onLeaf");
+            userprogramm = findMissingBrackets(userprogramm, "treeFront");
+            userprogramm = findMissingBrackets(userprogramm, "treeLeft");
+            userprogramm = findMissingBrackets(userprogramm, "treeRight");
+            userprogramm = findMissingBrackets(userprogramm, "mushroomFront");
 
-            userprogramm = userprogramm.replace(/kara.move/g, "if (!abort) await kara.move");
-            userprogramm = userprogramm.replace(/kara.turnLeft/g, "if (!abort) await kara.turnLeft");
-            userprogramm = userprogramm.replace(/kara.turnRight/g, "if (!abort) await kara.turnRight");
-            userprogramm = userprogramm.replace(/kara.putLeaf/g, "if (!abort) await kara.putLeaf");
-            userprogramm = userprogramm.replace(/kara.removeLeaf/g, "if (!abort) await kara.removeLeaf");
-            userprogramm = userprogramm.replace(/kara.putBerry/g, "if (!abort) await kara.putBerry");
-            userprogramm = userprogramm.replace(/kara.removeBerry/g, "if (!abort) await kara.removeBerry");
+            // Replace kara.method calls with async await versions
+            userprogramm = userprogramm.replace(/kara\.move/g, "if (!abort) await kara.move");
+            userprogramm = userprogramm.replace(/kara\.turnLeft/g, "if (!abort) await kara.turnLeft");
+            userprogramm = userprogramm.replace(/kara\.turnRight/g, "if (!abort) await kara.turnRight");
+            userprogramm = userprogramm.replace(/kara\.putLeaf/g, "if (!abort) await kara.putLeaf");
+            userprogramm = userprogramm.replace(/kara\.removeLeaf/g, "if (!abort) await kara.removeLeaf");
+            userprogramm = userprogramm.replace(/kara\.putBerry/g, "if (!abort) await kara.putBerry");
+            userprogramm = userprogramm.replace(/kara\.removeBerry/g, "if (!abort) await kara.removeBerry");
+            
+            // Replace sensor calls (these don't need await as they are synchronous)
+            userprogramm = userprogramm.replace(/kara\.onLeaf/g, "kara.onLeaf");
+            userprogramm = userprogramm.replace(/kara\.treeFront/g, "kara.treeFront");
+            userprogramm = userprogramm.replace(/kara\.treeLeft/g, "kara.treeLeft");
+            userprogramm = userprogramm.replace(/kara\.treeRight/g, "kara.treeRight");
+            userprogramm = userprogramm.replace(/kara\.mushroomFront/g, "kara.mushroomFront");
+            
+            // Replace method calls without kara prefix (add kara. prefix)
+            // Use word boundaries to avoid replacing parts of other words
+            userprogramm = userprogramm.replace(/\bmove\(/g, "if (!abort) await kara.move(");
+            userprogramm = userprogramm.replace(/\bturnLeft\(/g, "if (!abort) await kara.turnLeft(");
+            userprogramm = userprogramm.replace(/\bturnRight\(/g, "if (!abort) await kara.turnRight(");
+            userprogramm = userprogramm.replace(/\bputLeaf\(/g, "if (!abort) await kara.putLeaf(");
+            userprogramm = userprogramm.replace(/\bremoveLeaf\(/g, "if (!abort) await kara.removeLeaf(");
+            userprogramm = userprogramm.replace(/\bputBerry\(/g, "if (!abort) await kara.putBerry(");
+            userprogramm = userprogramm.replace(/\bremoveBerry\(/g, "if (!abort) await kara.removeBerry(");
+            
+            // Replace sensor calls without kara prefix (these don't need await)
+            userprogramm = userprogramm.replace(/\bonLeaf\(/g, "kara.onLeaf(");
+            userprogramm = userprogramm.replace(/\btreeFront\(/g, "kara.treeFront(");
+            userprogramm = userprogramm.replace(/\btreeLeft\(/g, "kara.treeLeft(");
+            userprogramm = userprogramm.replace(/\btreeRight\(/g, "kara.treeRight(");
+            userprogramm = userprogramm.replace(/\bmushroomFront\(/g, "kara.mushroomFront(");
+            
+            // Fix double replacements that might have occurred (clean up duplicated prefixes)
+            userprogramm = userprogramm.replace(/if \(!abort\) await kara\.if \(!abort\) await kara\./g, "if (!abort) await kara.");
+            userprogramm = userprogramm.replace(/kara\.kara\./g, "kara.");
 
             var regexp = /function (\w+)[ ]?\(.*?\)/g;
             while (result = regexp.exec(userprogramm)) {
