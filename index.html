@@ -110,10 +110,21 @@ $: Mushroom
             runButton.innerHTML = '<div class="spinner"></div>Running...';
             runButton.classList.add('btn-running');
             
+            // Editor deaktivieren während der Ausführung
+            editor.setOption('readOnly', true);
+            editor.getWrapperElement().style.opacity = '0.6';
+            editor.getWrapperElement().style.backgroundColor = '#f0f0f0';
+            
             // Event Listener für Ausführungsende
             var executionFinishedHandler = function() {
                 runButton.innerHTML = originalContent;
                 runButton.classList.remove('btn-running');
+                
+                // Editor wieder aktivieren
+                editor.setOption('readOnly', false);
+                editor.getWrapperElement().style.opacity = '1';
+                editor.getWrapperElement().style.backgroundColor = '#FFF';
+                
                 window.removeEventListener('karaExecutionFinished', executionFinishedHandler);
             };
             
