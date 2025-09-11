@@ -1,4 +1,3 @@
-
 //for loading images with correct path
 this.mydir = location.href.substring(0, location.href.lastIndexOf("/") + 1);
 //console.log("mydir: " + mydir);
@@ -850,6 +849,7 @@ window.onerror = function (msg, url, lineNo, columnNo, error) {
     showerror(error.message);
     return false;
 };
+
 
 
 
