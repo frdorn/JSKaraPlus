@@ -110,6 +110,15 @@ $: Mushroom
             runButton.innerHTML = '<div class="spinner"></div>Running...';
             runButton.classList.add('btn-running');
             
+            // Event Listener für Ausführungsende
+            var executionFinishedHandler = function() {
+                runButton.innerHTML = originalContent;
+                runButton.classList.remove('btn-running');
+                window.removeEventListener('karaExecutionFinished', executionFinishedHandler);
+            };
+            
+            window.addEventListener('karaExecutionFinished', executionFinishedHandler);
+            
             // Kurze Verzögerung, damit der Spinner sichtbar wird
             setTimeout(function() {
                 var node = document.getElementsByTagName(containerElement)[0];
@@ -123,25 +132,6 @@ $: Mushroom
 
                 // Setup ausführen
                 setup();
-                
-                // Überwachen, wann die Ausführung beendet ist
-                var checkCounter = 0;
-                var checkRunning = setInterval(function() {
-                    checkCounter++;
-                    // Wenn nach 50ms noch nicht läuft oder wenn aufgehört hat zu laufen
-                    if ((!isRunning && checkCounter > 5) || (isRunning === false)) {
-                        // Spinner entfernen und Button wieder aktivieren
-                        runButton.innerHTML = originalContent;
-                        runButton.classList.remove('btn-running');
-                        clearInterval(checkRunning);
-                    }
-                    // Sicherheitszeitüberschreitung nach 30 Sekunden
-                    if (checkCounter > 3000) {
-                        runButton.innerHTML = originalContent;
-                        runButton.classList.remove('btn-running');
-                        clearInterval(checkRunning);
-                    }
-                }, 10); // Alle 10ms prüfen für bessere Responsivität
             }, 50);
         }
 

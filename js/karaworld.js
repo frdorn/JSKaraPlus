@@ -898,6 +898,12 @@ function setup(redraw=false) {
                     showerror("Line " + line + ": " + e.message);
                 }
             }
+            
+            // Event auslösen, wenn Ausführung beendet ist
+            window.dispatchEvent(new CustomEvent('karaExecutionFinished'));
+        } else {
+            // Event auch auslösen, wenn nur redraw passiert (kein Code ausgeführt)
+            window.dispatchEvent(new CustomEvent('karaExecutionFinished'));
         }
 
     });
