@@ -90,11 +90,51 @@ $: Mushroom
     </script>
 
     <script>
+        // Funktionen für localStorage-Persistierung
+        function saveToLocalStorage() {
+            localStorage.setItem('jsKara_code', cm_code);
+            localStorage.setItem('jsKara_setup', cm_setup);
+            localStorage.setItem('jsKara_mode', mode.toString());
+        }
+
+        function loadFromLocalStorage() {
+            const savedCode = localStorage.getItem('jsKara_code');
+            const savedSetup = localStorage.getItem('jsKara_setup');
+            const savedMode = localStorage.getItem('jsKara_mode');
+            
+            if (savedCode !== null) {
+                cm_code = savedCode;
+            }
+            if (savedSetup !== null) {
+                cm_setup = savedSetup;
+            }
+            if (savedMode !== null) {
+                mode = parseInt(savedMode);
+            }
+        }
+
+        function clearLocalStorage() {
+            localStorage.removeItem('jsKara_code');
+            localStorage.removeItem('jsKara_setup');
+            localStorage.removeItem('jsKara_mode');
+            
+            // Auf Standardwerte zurücksetzen
+            cm_code = "\/*\nkara\n\tSensoren: onLeaf(), treeFront(), treeLeft(), treeRight(), mushroomFront()\n\tAktoren: move(), turnLeft(), turnRight(), putLeaf(), removeLeaf()\n    z.B. kara.move()\n*\/\n";
+            cm_setup = "##########\n#        #\n#        #\n#        #\n#  @     #\n#        #\n#        #\n#        #\n#        #\n##########";
+            mode = 0;
+            
+            editor.setValue(cm_code);
+            saveToLocalStorage();
+        }
+
         // Initial Values for code and world
         var mode = 0;
         var cm_code = "\/*\nkara\n\tSensoren: onLeaf(), treeFront(), treeLeft(), treeRight(), mushroomFront()\n\tAktoren: move(), turnLeft(), turnRight(), putLeaf(), removeLeaf()\n    z.B. kara.move()\n*\/\n";
         // old: var cm_setup = "/*\n\t#: Tree\n\t@: Kara\n\t.: Leaf (Berry)\n\t$: Mushroom\n\t*: Mushroom on a Leaf (Berry)\n\t+: Kara on a Leaf (Berry)\n*\/\n\n\/\/ Alle Leerzeichen in einer Zeile werden zu leeren Zellen.\nkarasworld = `world:\n##########\n#        #\n#        #\n#        #\n#  @     #\n#        #\n#        #\n#        #\n#        #\n##########`\n\n"
         var cm_setup = "##########\n#        #\n#        #\n#        #\n#  @     #\n#        #\n#        #\n#        #\n#        #\n##########"
+
+        // LocalStorage beim Laden der Seite prüfen
+        loadFromLocalStorage();
 
         // Setting default values 
         w = 50; // Zellgröße in px
@@ -102,6 +142,22 @@ $: Mushroom
         wait = 800; //wait between each move and turn of kara in ms
         style = "classic"; // use: classic, flaticon, icon8_color, icon8_ios or icon8_office
         editorFontSize = 15; // font size of editor in px, needs editor.refresh() to update
+
+        // Neue Initialisierungsfunktion ohne Code-Ausführung
+        function initKara() {
+            var node = document.getElementsByTagName(containerElement)[0];
+            while (node.hasChildNodes()) {
+                node.removeChild(node.lastChild);
+            }
+
+            // Nur die Welt aufbauen, ohne Code auszuführen
+            eval("karasworld = `world:\n" + cm_setup + "`");
+            
+            // Setup ausführen ohne Code-Ausführung
+            if (typeof setup === 'function') {
+                setup(true); // Parameter true bedeutet nur Setup, keine Code-Ausführung
+            }
+        }
 
         function runkara() {
             // Spinner anzeigen und Button deaktivieren
@@ -185,6 +241,7 @@ $: Mushroom
                 // hide element with id world
                 document.getElementById('world').style.display = "none";
                 editor.setValue(cm_setup);
+                saveToLocalStorage(); // Speichern beim Modusswitch
             }
             // mode 0: coding
             else {
@@ -194,6 +251,7 @@ $: Mushroom
                 document.getElementById('terminal-topbar').classList.remove("setup");    
 
                 editor.setValue(cm_code);
+                saveToLocalStorage(); // Speichern beim Modusswitch
 
                 // hide select-presets, show kara
                 document.getElementById('left-half-code').style.display = "block";
@@ -249,6 +307,7 @@ $: Mushroom
                             cm_setup = content;
                             editor.setValue(cm_setup);
                             console.log("setup file with name " + file + " loaded");
+                            saveToLocalStorage(); // Nach dem Laden speichern
                             setupkara();
                         }
                         else // Load code if in code mode
@@ -256,6 +315,7 @@ $: Mushroom
                             cm_code = content;
                             editor.setValue(cm_code);
                             console.log("code file with name " + file + " loaded");
+                            saveToLocalStorage(); // Nach dem Laden speichern
                             setupkara();
                         }
                     }
@@ -293,8 +353,9 @@ $: Mushroom
                 fetch('templates/' + selectedValue)
                 .then(response => response.text())
                 .then(data => {
-                    var cm_setup = data;
+                    cm_setup = data;
                     editor.setValue(cm_setup);
+                    saveToLocalStorage(); // Nach Template-Auswahl speichern
                 })
                 .catch(error => console.error('Error loading file:', error));
 
@@ -332,11 +393,14 @@ $: Mushroom
             else {
                 cm_setup = editor.getValue();
             }
+            // Automatisch speichern bei jeder Änderung
+            saveToLocalStorage();
         })
 
         var run = "";
 
-        runkara();
+        // Nur Initialisierung beim Laden der Seite, kein automatisches Ausführen
+        initKara();
 
     </script>
 </body>
