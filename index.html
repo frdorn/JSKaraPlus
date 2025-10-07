@@ -60,7 +60,7 @@ $: Mushroom
         </div>
         <div class="right-half">
             <div class="terminal-topbar" id="terminal-topbar">
-                <span class="title" id="editor_heading">Editor</span>
+                <span class="title" id="editor_heading">JSKaraPlus Editor</span>
             </div>
             <textarea id="editor"></textarea>
 
@@ -95,13 +95,13 @@ $: Mushroom
         function saveToLocalStorage() {
             localStorage.setItem('jsKara_code', cm_code);
             localStorage.setItem('jsKara_setup', cm_setup);
-            localStorage.setItem('jsKara_mode', mode.toString());
+            //localStorage.setItem('jsKara_mode', mode.toString());
         }
 
         function loadFromLocalStorage() {
             const savedCode = localStorage.getItem('jsKara_code');
             const savedSetup = localStorage.getItem('jsKara_setup');
-            const savedMode = localStorage.getItem('jsKara_mode');
+            //const savedMode = localStorage.getItem('jsKara_mode');
             
             if (savedCode !== null) {
                 cm_code = savedCode;
@@ -109,15 +109,15 @@ $: Mushroom
             if (savedSetup !== null) {
                 cm_setup = savedSetup;
             }
-            if (savedMode !== null) {
+            /*if (savedMode !== null) {
                 mode = parseInt(savedMode);
-            }
+            }*/
         }
 
         function clearLocalStorage() {
             localStorage.removeItem('jsKara_code');
             localStorage.removeItem('jsKara_setup');
-            localStorage.removeItem('jsKara_mode');
+            //localStorage.removeItem('jsKara_mode');
             
             // Auf Standardwerte zurücksetzen
             cm_code = "\/*\nkara\n\tSensoren: onLeaf(), treeFront(), treeLeft(), treeRight(), mushroomFront()\n\tAktoren: move(), turnLeft(), turnRight(), putLeaf(), removeLeaf()\n    z.B. kara.move()\n*\/\n";
@@ -219,7 +219,7 @@ $: Mushroom
             // mode 1: setup
             if (mode == 0) {
                 mode = 1;
-                document.getElementById('2').innerHTML = "Code";
+                document.getElementById('2').innerHTML = "zurück zum Code";
                 document.getElementById('editor_heading').innerHTML = "Kara World Editor";
                 document.getElementById('terminal-topbar').classList.add("setup"); 
                 
@@ -248,7 +248,7 @@ $: Mushroom
             else {
                 mode = 0;
                 document.getElementById('2').innerHTML = "Setup"
-                document.getElementById('editor_heading').innerHTML = "Editor";
+                document.getElementById('editor_heading').innerHTML = "JSKaraPlus Editor";
                 document.getElementById('terminal-topbar').classList.remove("setup");    
 
                 editor.setValue(cm_code);
@@ -265,10 +265,10 @@ $: Mushroom
                 document.getElementById('Reset').style.display = "inline-block";   
 
                 document.getElementById('LoadLabel').innerHTML = "";
-                document.getElementById('Load').style.width = "6%";
+                document.getElementById('Load').style.width = "60px";
                 document.getElementById('Load').classList.remove("darkred");
                 document.getElementById('SaveLabel').innerHTML = "";
-                document.getElementById('Save').style.width = "6%";
+                document.getElementById('Save').style.width = "60px";
                 document.getElementById('Save').classList.remove("darkred");
                 // appear element with id world
                 document.getElementById('world').style.display = "block";

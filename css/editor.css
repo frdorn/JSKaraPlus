@@ -198,8 +198,10 @@ border-color: #204d74;
     width: calc(38% - 30px); 
 }
 
+/* Feste Breite für Load- und Save-Button */
 #Load, #Save {
     gap: 8px;
+    min-width: 60px;
 }
 
 /* Spinner Styles */
