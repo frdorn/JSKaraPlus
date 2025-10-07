@@ -16,7 +16,7 @@
         <div class="left-half">
             <div id="left-half-code">
                 <kara id="kara"></kara>
-                <small>Speed</small>
+                <small>Geschwindigkeit</small>
                 <input type="range" id="mySlider" min="100" max="1200" value="800" oninput="sliderChanged(this.value)">
             </div>
             <div id="left-half-setup" style="display: none;">
@@ -63,18 +63,19 @@ $: Mushroom
                 <span class="title" id="editor_heading">Editor</span>
             </div>
             <textarea id="editor"></textarea>
-            <button id="1" class="btn btn-primary btn-wide" onClick="runkara()"><i class="gg-play-button"
-                    style="float: left;"></i>Run</button>
-            <button id="Reset" class="btn btn-primary btn-wide" onClick="resetkara()"><i
-                    class="gg-play-backwards" style="float: left; margin-top: 5px;"></i>Reset</button>
-            <button id="Load" class="btn btn-primary" onClick="load()" style="width: 6%;"><i
-                    class="gg-folder" style="float: left;"></i><span id="LoadLabel"></span></button>
-            <button id="Save" class="btn btn-primary" onClick="save()" style="width: 6%;"><i
-                    class="gg-software-download" style="float: left;"></i><span id="SaveLabel"></span></button>
 
-
-
-
+            <div style="display: flex; gap: 3px;">
+                <button id="1" class="btn btn-primary btn-wide" onClick="runkara()"><i class="gg-play-button"
+                        style="float: left;"></i>Ausführen</button>
+                <button id="Reset" class="btn btn-primary btn-wide" onClick="resetkara()"><i class="gg-play-backwards"
+                        style="float: left; margin-top: 5px;"></i>Reset</button>
+                <button id="Load" class="btn btn-primary" onClick="load()"
+                    style="width: 44px; display: flex; align-items: center; justify-content: center;"><i class="gg-folder"></i><span
+                        id="LoadLabel"></span></button>
+                <button id="Save" class="btn btn-primary" onClick="save()"
+                    style="width: 44px; display: flex; align-items: center; justify-content: center;"><i
+                        class="gg-software-download"></i><span id="SaveLabel"></span></button>
+            </div>
         </div>
     </section>
 
@@ -224,7 +225,7 @@ $: Mushroom
                 
                 // Show select-presets, hide kara
                 document.getElementById('left-half-code').style.display = "none";
-                document.getElementById('left-half-setup').style.display = "block";
+                document.getElementById('left-half-setup').style.display = "flex";
 
                 // remove class darkred from button
                 document.getElementById('2').classList.remove("darkred");
@@ -232,10 +233,10 @@ $: Mushroom
                 document.getElementById('1').style.display = "none";
                 document.getElementById('Reset').style.display = "none";       
                 // change button text
-                document.getElementById('LoadLabel').innerHTML = "Load Karaworld";    
+                document.getElementById('LoadLabel').innerHTML = "Karaworld laden";    
                 document.getElementById('Load').style.width = "300px";
                 document.getElementById('Load').classList.add("darkred");
-                document.getElementById('SaveLabel').innerHTML = "Save Karaworld";
+                document.getElementById('SaveLabel').innerHTML = "Karaworld speichern";
                 document.getElementById('Save').style.width = "300px";
                 document.getElementById('Save').classList.add("darkred");
                 // hide element with id world
@@ -254,7 +255,7 @@ $: Mushroom
                 saveToLocalStorage(); // Speichern beim Modusswitch
 
                 // hide select-presets, show kara
-                document.getElementById('left-half-code').style.display = "block";
+                document.getElementById('left-half-code').style.display = "flex";
                 document.getElementById('left-half-setup').style.display = "none";
 
                 // add class darkred to button
