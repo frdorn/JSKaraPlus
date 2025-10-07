@@ -373,15 +373,219 @@ $: Mushroom
     </script>
 
     <script>
+        // Kara-spezifische Autocomplete-Funktion
+        CodeMirror.registerHelper("hint", "kara", function(editor, options) {
+            var cursor = editor.getCursor();
+            var token = editor.getTokenAt(cursor);
+            var start = token.start;
+            var end = cursor.ch;
+            var word = token.string;
+
+            // Erweiterte Logik für "kara." Eingaben
+            var line = editor.getLine(cursor.line);
+            var beforeCursor = line.substring(0, cursor.ch);
+            
+            // Prüfe, ob wir nach "kara." sind
+            if (beforeCursor.endsWith("kara.")) {
+                // Wenn bereits "kara." eingegeben wurde, starte die Vervollständigung nach dem Punkt
+                start = cursor.ch;
+                word = "";
+            } else if (word === "kara" || (word.indexOf("kara") === 0 && word.indexOf(".") > 0)) {
+                // Wenn "kara" oder "kara.etwas" eingegeben wurde
+                start = token.start;
+                word = token.string;
+            } else {
+                // Normale Token-Behandlung für andere Fälle
+                start = token.start;
+                word = token.string;
+            }
+
+            // Kara-Methoden mit Beschreibungen
+            var karaCompletions = [
+                // Aktoren (Aktionen)
+                {
+                    text: "kara.move()",
+                    displayText: "kara.move() - Kara bewegt sich einen Schritt vorwärts",
+                    type: "function"
+                },
+                {
+                    text: "kara.turnLeft()",
+                    displayText: "kara.turnLeft() - Kara dreht sich nach links",
+                    type: "function"
+                },
+                {
+                    text: "kara.turnRight()",
+                    displayText: "kara.turnRight() - Kara dreht sich nach rechts",
+                    type: "function"
+                },
+                {
+                    text: "kara.putLeaf()",
+                    displayText: "kara.putLeaf() - Kara legt ein Blatt ab",
+                    type: "function"
+                },
+                {
+                    text: "kara.removeLeaf()",
+                    displayText: "kara.removeLeaf() - Kara nimmt ein Blatt auf",
+                    type: "function"
+                },
+                // Sensoren (Abfragen)
+                {
+                    text: "kara.onLeaf()",
+                    displayText: "kara.onLeaf() - Prüft, ob Kara auf einem Blatt steht",
+                    type: "function"
+                },
+                {
+                    text: "kara.treeFront()",
+                    displayText: "kara.treeFront() - Prüft, ob vor Kara ein Baum steht",
+                    type: "function"
+                },
+                {
+                    text: "kara.treeLeft()",
+                    displayText: "kara.treeLeft() - Prüft, ob links von Kara ein Baum steht",
+                    type: "function"
+                },
+                {
+                    text: "kara.treeRight()",
+                    displayText: "kara.treeRight() - Prüft, ob rechts von Kara ein Baum steht",
+                    type: "function"
+                },
+                {
+                    text: "kara.mushroomFront()",
+                    displayText: "kara.mushroomFront() - Prüft, ob vor Kara ein Pilz steht",
+                    type: "function"
+                }
+            ];
+
+            // Methoden ohne kara-Präfix (für Kompatibilität)
+            var shortCompletions = [
+                {
+                    text: "move()",
+                    displayText: "move() - Kara bewegt sich einen Schritt vorwärts",
+                    type: "function"
+                },
+                {
+                    text: "turnLeft()",
+                    displayText: "turnLeft() - Kara dreht sich nach links",
+                    type: "function"
+                },
+                {
+                    text: "turnRight()",
+                    displayText: "turnRight() - Kara dreht sich nach rechts",
+                    type: "function"
+                },
+                {
+                    text: "putLeaf()",
+                    displayText: "putLeaf() - Kara legt ein Blatt ab",
+                    type: "function"
+                },
+                {
+                    text: "removeLeaf()",
+                    displayText: "removeLeaf() - Kara nimmt ein Blatt auf",
+                    type: "function"
+                },
+                {
+                    text: "onLeaf()",
+                    displayText: "onLeaf() - Prüft, ob Kara auf einem Blatt steht",
+                    type: "function"
+                },
+                {
+                    text: "treeFront()",
+                    displayText: "treeFront() - Prüft, ob vor Kara ein Baum steht",
+                    type: "function"
+                },
+                {
+                    text: "treeLeft()",
+                    displayText: "treeLeft() - Prüft, ob links von Kara ein Baum steht",
+                    type: "function"
+                },
+                {
+                    text: "treeRight()",
+                    displayText: "treeRight() - Prüft, ob rechts von Kara ein Baum steht",
+                    type: "function"
+                },
+                {
+                    text: "mushroomFront()",
+                    displayText: "mushroomFront() - Prüft, ob vor Kara ein Pilz steht",
+                    type: "function"
+                }
+            ];
+
+            var filtered = [];
+
+            // Spezielle Behandlung für "kara." - zeige nur Methoden ohne "kara."-Präfix
+            if (beforeCursor.endsWith("kara.")) {
+                filtered = shortCompletions;
+            } else if (word === "kara" || word.indexOf("kara.") === 0) {
+                // Wenn "kara" oder "kara.etwas" eingegeben wurde, zeige vollständige kara.method() Methoden
+                filtered = karaCompletions.filter(function(completion) {
+                    return completion.text.toLowerCase().indexOf(word.toLowerCase()) === 0;
+                });
+            } else {
+                // Filtere alle Vervollständigungen basierend auf dem eingegebenen Text
+                var allCompletions = karaCompletions.concat(shortCompletions);
+                filtered = allCompletions.filter(function(completion) {
+                    return completion.text.toLowerCase().indexOf(word.toLowerCase()) === 0;
+                });
+            }
+
+            // Erweiterte JavaScript-Schlüsselwörter für Programmierstrukturen
+            var jsKeywords = [
+                /*{text: "for", displayText: "for - Schleife", type: "keyword"},
+                {text: "while", displayText: "while - Bedingungsschleife", type: "keyword"},
+                {text: "if", displayText: "if - Bedingung", type: "keyword"},
+                {text: "else", displayText: "else - Alternative", type: "keyword"},
+                {text: "function", displayText: "function - Funktion definieren", type: "keyword"},
+                {text: "var", displayText: "var - Variable definieren", type: "keyword"},
+                {text: "let", displayText: "let - Variable definieren", type: "keyword"},
+                {text: "const", displayText: "const - Konstante definieren", type: "keyword"}*/
+            ];
+
+            // JavaScript-Schlüsselwörter nur hinzufügen, wenn es kein kara-spezifischer Kontext ist
+            if (!beforeCursor.endsWith("kara.") && !word.includes("kara")) {
+                var jsFiltered = jsKeywords.filter(function(completion) {
+                    return completion.text.toLowerCase().indexOf(word.toLowerCase()) === 0;
+                });
+                filtered = filtered.concat(jsFiltered);
+            }
+
+            // Wenn immer noch keine Vorschläge gefunden, zeige die wichtigsten Kara-Methoden
+            if (filtered.length === 0 && word.length <= 3 && !beforeCursor.endsWith("kara.")) {
+                filtered = [
+                    karaCompletions[0], // kara.move()
+                    karaCompletions[1], // kara.turnLeft()
+                    karaCompletions[2], // kara.turnRight()
+                    karaCompletions[5], // kara.onLeaf()
+                    karaCompletions[6]  // kara.treeFront()
+                ];
+            }
+
+            return {
+                list: filtered,
+                from: CodeMirror.Pos(cursor.line, start),
+                to: CodeMirror.Pos(cursor.line, end)
+            };
+        });
+
         var myTextarea = document.getElementById('editor');
         var editor = CodeMirror.fromTextArea(myTextarea, {
             lineNumbers: true,
             autoCloseBrackets: true,
             completeSingle: false,            
-            extraKeys: { "Ctrl-Space": "autocomplete" },
+            extraKeys: { 
+                "Ctrl-Space": "autocomplete",
+                "Tab": function(cm) {
+                    if (cm.somethingSelected()) {
+                        cm.indentSelection("add");
+                    } else {
+                        cm.showHint({hint: CodeMirror.hint.kara, completeSingle: false});
+                    }
+                }
+            },
             mode: { name: "javascript", globalVars: true },
-
-
+            hintOptions: {
+                hint: CodeMirror.hint.kara,
+                completeSingle: false
+            }
         });
         editor.getWrapperElement().style["font-size"] = editorFontSize + "px";
 
@@ -396,6 +600,42 @@ $: Mushroom
             }
             // Automatisch speichern bei jeder Änderung
             saveToLocalStorage();
+            
+            // Automatische Autocomplete-Auslösung
+            if (mode == 0 && change.origin !== "complete" && change.origin !== "undo" && change.origin !== "redo") {
+                var cursor = cm.getCursor();
+                var line = cm.getLine(cursor.line);
+                var beforeCursor = line.substring(0, cursor.ch);
+                var token = cm.getTokenAt(cursor);
+                var word = token.string;
+                
+                // Triggere Autocomplete bei bestimmten Eingaben
+                var shouldTrigger = false;
+                
+                // Nach "kara." sofort triggern
+                if (beforeCursor.endsWith("kara.")) {
+                    shouldTrigger = true;
+                }
+                // Bei Eingabe von mindestens 2 Zeichen einer Kara-Methode
+                else if (word && word.length >= 2 && (
+                    word.toLowerCase().indexOf("kara") === 0 ||
+                    word.toLowerCase().indexOf("move") === 0 ||
+                    word.toLowerCase().indexOf("turn") === 0 ||
+                    word.toLowerCase().indexOf("put") === 0 ||
+                    word.toLowerCase().indexOf("remove") === 0 ||
+                    word.toLowerCase().indexOf("tree") === 0 ||
+                    word.toLowerCase().indexOf("mushroom") === 0 ||
+                    word.toLowerCase().indexOf("on") === 0
+                )) {
+                    shouldTrigger = true;
+                }
+                
+                if (shouldTrigger) {
+                    setTimeout(function() {
+                        cm.showHint({hint: CodeMirror.hint.kara, completeSingle: false});
+                    }, 100);
+                }
+            }
         })
 
         var run = "";
